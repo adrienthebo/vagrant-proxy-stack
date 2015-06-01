@@ -1,0 +1,22 @@
+---
+roles:
+  private_network:
+    private_networks:
+      - {ip: '0.0.0.0', auto_network: true}
+  proxy_client:
+    provisioners:
+      - type: shell
+        inline: |-
+          iptables -I OUTPUT 1 -p tcp --destination-port 443 -j REJECT
+          iptables -I OUTPUT 2 -p tcp --destination-port 80 -j REJECT
+  proxy_server:
+    provisioners:
+      - type: shell
+        inline: "rpm -UvH http://yum.puppetlabs.com/puppetlabs-release-el-6.noarch.rpm"
+      - type: shell
+        inline: |-
+          yum -y install puppet
+          puppet module install puppetlabs-stdlib
+          puppet module install thias-squid3
+          puppet apply -e 'include squid3'
+          puppet apply -e "service { 'iptables': ensure => stopped }"

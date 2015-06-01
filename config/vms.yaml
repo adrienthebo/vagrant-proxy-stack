@@ -1,0 +1,8 @@
+---
+vms:
+  - name: proxy_client
+    box: centos-6.6-64-nocm
+    roles: ['proxy_client', 'private_network']
+  - name: proxy_server
+    box: centos-6.6-64-nocm
+    roles: ['proxy_server', 'private_network']
