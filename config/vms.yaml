@@ -1,8 +1,15 @@
 ---
 vms:
-  - name: proxy_client
-    box: centos-6.6-64-nocm
+  - name: proxy-client
+    box: 'puppetlabs/debian-7.8-64-puppet'
     roles: ['proxy_client', 'private_network']
-  - name: proxy_server
-    box: centos-6.6-64-nocm
+    provisioners:
+      - type: shell
+        inline: |-
+          gem install bundler
+      - type: puppet
+        manifest_path: 'manifests/nfs.pp'
+  - name: proxy-server
+    box: 'puppetlabs/debian-7.8-64-puppet'
     roles: ['proxy_server', 'private_network']
+
